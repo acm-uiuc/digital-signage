@@ -1,16 +1,17 @@
 export interface AppConfig {
-    bottomGutterHeight: string
+    bottomGutterHeight?: string
+    hideRightBar?: boolean
 }
 
 export const defaultConfig: AppConfig = {
-    bottomGutterHeight: '0vh'
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '4vh'
+    bottomGutterHeight: '75px',
+    hideRightBar: true
 };
 
-const configs = {
+export const configs = {
     'default': defaultConfig,
     'solstice': solsticeConfig
 }
