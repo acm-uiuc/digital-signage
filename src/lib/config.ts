@@ -3,14 +3,14 @@ export interface AppConfig {
 }
 
 export const defaultConfig: AppConfig = {
-    bottomGutterHeight: '100px'
+    bottomGutterHeight: '1000px'
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '100px'
+    bottomGutterHeight: '1000px'
 };
 
-const configs = {
+export const configs = {
     'default': defaultConfig,
     'solstice': solsticeConfig
 }
