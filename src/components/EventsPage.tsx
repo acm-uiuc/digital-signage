@@ -56,15 +56,15 @@ export function EventsPage({ environment }: { environment: string | null | undef
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-acmblue" key={environment}>
             <main className="flex flex-grow min-h-0">
-                <div className="w-7/12 overflow-y-auto">
+                <div className={`w-${config.leftBarWidth} overflow-y-auto`}>
                     <FeaturedList events={featuredListEvents} />
                 </div>
-                <div className="w-5/12 overflow-y-auto">
+                {!config.rightBarWidth.startsWith("0/") && <div className={`w-${config.rightBarWidth} overflow-y-auto`}>
                     <AllEventsList
                         repeatingEvents={repeatingEvents}
                         oneTimeEvents={oneTimeEvents}
                     />
-                </div>
+                </div>}
             </main>
             {config.bottomGutterHeight && (
                 <div
