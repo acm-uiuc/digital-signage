@@ -7,13 +7,14 @@ import FeaturedList from '@/components/FeaturedList';
 import AllEventsList from '@/components/AllEventsList';
 import { Event } from '@/lib/types';
 import { processNextOccurrences } from '@/lib/eventProcessor';
+import useHourlyRefresh from '@/lib/hooks/useHourlyRefresh';
 
 const MAX_FEATURED_ITEMS = 5;
 const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 
 export default function HomePage() {
-  const [allEvents, setAllEvents] = useState<Event[] | null>(null);
-
+  const [allEvents, setAllEvents] = useState<Event[] | null | undefined>(undefined);
+  useHourlyRefresh();
   useEffect(() => {
     const fetchAndProcessEvents = async () => {
       const API_URL = 'https://core.acm.illinois.edu/api/v1/events?upcomingOnly=true';
@@ -34,13 +35,19 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!allEvents) {
+  if (allEvents === undefined) {
+    return null;
+  }
+
+  if (allEvents === null) {
     return (
       <main className="flex items-center justify-center min-h-screen bg-primary text-secondary-700">
-        <h1 className="text-4xl font-bold">Loading Events...</h1>
+        <h1 className="text-4xl font-bold">An error occurred</h1>
       </main>
     );
   }
+
+
 
   const repeatingEvents = allEvents.filter(e => e.repeats).filter(e => !e.featured);
   const oneTimeEvents = allEvents.filter(e => !e.repeats).filter(e => !e.featured);
