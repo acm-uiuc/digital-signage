@@ -7,7 +7,7 @@ export const defaultConfig: AppConfig = {
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '4vh'
+    bottomGutterHeight: '100px'
 };
 
 const configs = {
