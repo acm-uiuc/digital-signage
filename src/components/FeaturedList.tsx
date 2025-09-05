@@ -101,7 +101,8 @@ export default function FeaturedList({ events }: { events: Event[] }) {
             <div className="flex-grow relative">
                 <Image
                     src="https://static.acm.illinois.edu/banner-white.png"
-                    alt="ACM Illinois Logo"
+                    alt="ACM @ UIUC Logo"
+                    unoptimized
                     width={160}
                     height={80}
                     className="rounded-lg absolute bottom-0 left-0 z-10"
