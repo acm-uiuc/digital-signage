@@ -57,7 +57,7 @@ export function EventsPage({ environment }: { environment: string | null | undef
         <div className="flex flex-col h-screen overflow-hidden bg-acmblue" key={environment}>
             <main className="flex flex-grow min-h-0">
                 <div className={`w-2/3 overflow-y-auto`}>
-                    <FeaturedList events={featuredListEvents} />
+                    <FeaturedList events={featuredListEvents} hideAcmLogo={config.hideAcmLogo} />
                 </div>
                 {!config.hideRightBar && <div className={`w-1/3 overflow-y-auto`}>
                     <AllEventsList

@@ -68,7 +68,7 @@ function PageContent({ events, pageCount }: { events: Event[], pageCount: number
     );
 }
 
-export default function FeaturedList({ events }: { events: Event[] }) {
+export default function FeaturedList({ events, hideAcmLogo }: { events: Event[], hideAcmLogo?: boolean }) {
     const [currentPage, setCurrentPage] = useState(0);
 
     const pageCount = Math.ceil(events.length / ITEMS_PER_PAGE);
@@ -105,6 +105,7 @@ export default function FeaturedList({ events }: { events: Event[] }) {
                     unoptimized
                     width={160}
                     height={80}
+                    hidden={hideAcmLogo}
                     className="rounded-lg absolute bottom-0 left-0 z-10"
                 />
                 <AnimatePresence mode="wait">

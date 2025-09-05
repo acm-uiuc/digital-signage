@@ -1,14 +1,16 @@
 export interface AppConfig {
     bottomGutterHeight?: string
     hideRightBar?: boolean
+    hideAcmLogo?: boolean
 }
 
 export const defaultConfig: AppConfig = {
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '75px',
-    hideRightBar: true
+    bottomGutterHeight: '30px',
+    hideRightBar: true,
+    hideAcmLogo: true
 };
 
 export const configs = {
