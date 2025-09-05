@@ -56,7 +56,7 @@ export function EventsPage({ environment }: { environment: string | null | undef
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-acmblue" key={environment}>
             <main className="flex flex-grow min-h-0">
-                <div className={`w-${config.hideRightBar ? "3/4" : "7/12"} overflow-y-auto`}>
+                <div className={`w-${config.hideRightBar ? "2/3" : "7/12"} overflow-y-auto`}>
                     <FeaturedList events={featuredListEvents} />
                 </div>
                 {!config.hideRightBar && <div className={`w-5/12 overflow-y-auto`}>
