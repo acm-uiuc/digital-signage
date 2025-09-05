@@ -9,6 +9,7 @@ import { Event } from '@/lib/types';
 import { processNextOccurrences } from '@/lib/eventProcessor';
 
 const MAX_FEATURED_ITEMS = 5;
+const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 
 export default function HomePage() {
   const [allEvents, setAllEvents] = useState<Event[] | null>(null);
@@ -29,7 +30,7 @@ export default function HomePage() {
     };
     fetchAndProcessEvents();
 
-    const interval = setInterval(fetchAndProcessEvents, 10 * 60 * 1000);
+    const interval = setInterval(fetchAndProcessEvents, REFRESH_EVERY_SECONDS * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -47,7 +48,7 @@ export default function HomePage() {
   const featuredListEvents = allEvents.filter(e => e.featured).slice(0, MAX_FEATURED_ITEMS);
 
   return (
-    <main className="flex min-h-screen bg-primary">
+    <main className="flex min-h-screen bg-acmblue">
       <div className="w-7/12">
         <FeaturedList events={featuredListEvents} />
       </div>

@@ -5,26 +5,33 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
-import { Calendar, MapPin, Users } from 'lucide-react';
+import { Calendar, MapPin, Repeat, Users } from 'lucide-react';
 import { Event } from '@/lib/types';
+import { getInformalRepeatString } from '@/lib/eventProcessor';
 
 const ITEMS_PER_PAGE = 4;
 export const PAGE_SWITCH_INTERVAL_MS = 10000;
 
 function EventCard({ event }: { event: Event }) {
     return (
-        <div className="relative w-full p-6 space-y-3 bg-yale_blue-400/50 border border-yale_blue-300 rounded-xl shadow-lg">
+        <div className="relative w-full p-6 space-y-3 bg-acmblue-400/50 border border-acmblue-300 rounded-xl shadow-lg drop-shadow-lg">
             {event.host !== "ACM" && (
                 <div className="absolute top-4 right-4 bg-atomic_tangerine text-yale_blue-100 text-xs font-bold px-2.5 py-1 rounded-full">
-                    <p className="text-cambridge_blue text-lg font-semibold tracking-wide flex items-center gap-2">
+                    <p className="text-lg font-semibold tracking-wide flex items-center gap-2">
                         <Users size={20} /> {event.host}
                     </p>
                 </div>
             )}
-            <h2 className="text-3xl font-semibold text-white">{event.title}</h2>
-            <p className="text-base font-light text-white">{event.description}</p>
+            <h2 className="text-4xl font-semibold text-white">{event.title}</h2>
+            <p className="text-lg font-normal text-white">{event.description}</p>
             <div className="text-vista_blue-700 text-lg pt-1 space-y-2">
                 <p className="flex items-center gap-3"><Calendar size={18} /> <span>{new Date(event.start).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' })}</span></p>
+                {event.repeats && (
+                    <div className="flex items-center gap-3">
+                        <Repeat size={18} />
+                        <span>{getInformalRepeatString(event.repeats)}</span>
+                    </div>
+                )}
                 <p className="flex items-center gap-3"><MapPin size={18} /> <span>{event.location}</span></p>
             </div>
         </div>

@@ -29,6 +29,18 @@ export function getRepeatString(repeats: ValidRepeat): string {
     }
 }
 
+export function getInformalRepeatString(repeats: ValidRepeat): string {
+    switch (repeats) {
+        case 'weekly': return 'Every week';
+        case 'biweekly': return 'Every other week';
+        case 'monthly': return 'Every month';
+        case 'semianually': return 'Every 6 months';
+        case 'yearly': return 'Every year';
+        default: return '';
+    }
+}
+
+
 /**
  * Processes a raw list of events to find the next valid occurrence of each one.
  * @param eventTemplates - The raw array of events from the API.

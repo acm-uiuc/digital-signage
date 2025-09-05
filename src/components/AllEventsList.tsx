@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { Event } from '@/lib/types';
-import { getRepeatString } from '@/lib/eventProcessor';
+import { getInformalRepeatString } from '@/lib/eventProcessor';
 import { Calendar, MapPin, Repeat } from 'lucide-react';
 import { PAGE_SWITCH_INTERVAL_MS as featuredSwitchMs } from './FeaturedList';
 
@@ -41,13 +41,13 @@ function getReasonableSlice(s: string): string {
 function EventItem({ event }: { event: Event }) {
     return (
         <div className="py-3 border-b border-primary-200">
-            <h3 className="font-bold text-secondary-600">{event.title}</h3>
-            <div className="flex justify-between items-center text-sm text-secondary-800">
+            <h3 className="text-lg font-bold text-secondary-600">{event.title}</h3>
+            <div className="flex justify-between items-center text-base text-secondary-800">
                 <span>{new Date(event.start).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - {event.host}</span>
                 {event.repeats && (
-                    <div className="flex items-center gap-1 text-cambridge_blue text-xs font-semibold">
+                    <div className="flex items-center gap-1 text-base font-semibold">
                         <Repeat size={12} />
-                        <span>{getRepeatString(event.repeats)}</span>
+                        <span>{getInformalRepeatString(event.repeats)}</span>
                     </div>
                 )}
             </div>
@@ -141,7 +141,7 @@ function EventSection({ title, events }: { title: string; events: Event[] }) {
 
 export default function AllEventsList({ repeatingEvents, oneTimeEvents }: { repeatingEvents: Event[]; oneTimeEvents: Event[] }) {
     return (
-        <div className="w-full h-full p-8 bg-primary-300/80 flex flex-col gap-y-16 overflow-y-auto">
+        <div className="w-full h-full p-8 bg-primary-300/80 flex flex-col gap-y-4 overflow-y-auto">
             <EventSection title="One-Time Events" events={oneTimeEvents} />
             <EventSection title="Repeating Events" events={repeatingEvents} />
         </div>
