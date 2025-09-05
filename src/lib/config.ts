@@ -1,13 +1,12 @@
 export interface AppConfig {
-    bottomGutterHeight: string
+    bottomGutterHeight?: string
 }
 
 export const defaultConfig: AppConfig = {
-    bottomGutterHeight: '1000px'
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '1000px'
+    bottomGutterHeight: '75px'
 };
 
 export const configs = {

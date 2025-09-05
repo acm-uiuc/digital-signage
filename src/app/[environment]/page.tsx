@@ -9,7 +9,7 @@ export async function generateStaticParams() {
 export default function HomePage({ params }: { params: { environment: string } }) {
   return (
     <Suspense>
-      <EventsPage environment={params.environment} />
+      <EventsPage environment={params.environment} key={params.environment} />
     </Suspense>
   );
 }

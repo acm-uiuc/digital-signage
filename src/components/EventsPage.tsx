@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo, Suspense } from 'react';
@@ -15,7 +14,6 @@ const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 export function EventsPage({ environment }: { environment: string | null | undefined }) {
     const [allEvents, setAllEvents] = useState<Event[] | null | undefined>(undefined);
     const config = useMemo(() => getConfig(environment || 'default'), [environment]);
-
     useHourlyRefresh();
 
     useEffect(() => {
@@ -56,12 +54,12 @@ export function EventsPage({ environment }: { environment: string | null | undef
     const featuredListEvents = allEvents.filter(e => e.featured).slice(0, MAX_FEATURED_ITEMS);
 
     return (
-        <div className="flex flex-col min-h-screen bg-acmblue" key={environment}>
-            <main className="flex flex-grow">
-                <div className="w-7/12">
+        <div className="flex flex-col h-screen overflow-hidden bg-acmblue" key={environment}>
+            <main className="flex flex-grow min-h-0">
+                <div className="w-7/12 overflow-y-auto">
                     <FeaturedList events={featuredListEvents} />
                 </div>
-                <div className="w-5/12">
+                <div className="w-5/12 overflow-y-auto">
                     <AllEventsList
                         repeatingEvents={repeatingEvents}
                         oneTimeEvents={oneTimeEvents}
@@ -70,7 +68,7 @@ export function EventsPage({ environment }: { environment: string | null | undef
             </main>
             {config.bottomGutterHeight && (
                 <div
-                    className="w-full bg-acmblue"
+                    className="flex w-full bg-acmblue"
                     style={{ height: config.bottomGutterHeight }}
                 />
             )}
