@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import FeaturedList from '@/components/FeaturedList';
 import AllEventsList from '@/components/AllEventsList';
 import { Event } from '@/lib/types';
@@ -12,7 +12,7 @@ import { getConfig } from '@/lib/config';
 const MAX_FEATURED_ITEMS = 5;
 const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 
-export default function HomePage() {
+function EventsPage() {
   const [allEvents, setAllEvents] = useState<Event[] | null | undefined>(undefined);
   const searchParams = useSearchParams();
   const environment = searchParams.get('environment');
@@ -39,10 +39,10 @@ export default function HomePage() {
 
     const interval = setInterval(fetchAndProcessEvents, REFRESH_EVERY_SECONDS * 1000);
     return () => clearInterval(interval);
-  }, [config]); // Re-run this effect when the config changes.
+  }, [config]);
 
   if (allEvents === undefined) {
-    return null; // Or a loading spinner
+    return null; // Or a loading spinner component
   }
 
   if (allEvents === null) {
@@ -77,5 +77,13 @@ export default function HomePage() {
         />
       )}
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <EventsPage />
+    </Suspense>
   );
 }
