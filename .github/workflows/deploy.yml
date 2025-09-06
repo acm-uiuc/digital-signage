@@ -46,7 +46,7 @@ jobs:
             opennext-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Build with OpenNext
-        run: yarn opennextjs-cloudflare build
+        run: yarn build
 
       - name: Deploy to Cloudflare
         id: deploy
@@ -54,7 +54,7 @@ jobs:
         with:
           apiToken: ${{ secrets.PAGES_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: opennextjs-cloudflare deploy --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.head_ref || github.ref_name }}
+          command: deploy .open-next/ --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find Comment
