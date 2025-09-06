@@ -46,7 +46,7 @@ jobs:
         with:
           apiToken: ${{ secrets.PAGES_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --outdir .open-next/
+          command: deploy --outdir .open-next/ --no-bundle
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find Comment
