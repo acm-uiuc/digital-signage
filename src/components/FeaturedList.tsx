@@ -38,24 +38,21 @@ export default function FeaturedList({ events }: { events: Event[] }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [animation, setAnimation] = useState({ duration: 0, height: 0 });
 
-    // This effect measures the content and decides if animation is needed.
     useEffect(() => {
         if (!containerRef.current || !containerRef.current.parentElement) return;
 
         const measureContent = () => {
-            const contentHeight = containerRef.current!.scrollHeight / 2; // Height of the original list
+            const contentHeight = containerRef.current!.scrollHeight / 2;
             const viewportHeight = containerRef.current!.parentElement!.clientHeight;
 
-            // Only animate if the content overflows the viewport
             if (contentHeight > viewportHeight) {
                 const duration = contentHeight / SCROLL_SPEED_PX_PER_SEC;
                 setAnimation({ duration, height: contentHeight });
             } else {
-                setAnimation({ duration: 0, height: 0 }); // Reset if no overflow
+                setAnimation({ duration: 0, height: 0 });
             }
         };
 
-        // A small delay ensures the DOM is fully rendered before measuring
         const timeoutId = setTimeout(measureContent, 100);
         return () => clearTimeout(timeoutId);
 
@@ -72,12 +69,12 @@ export default function FeaturedList({ events }: { events: Event[] }) {
                 </div>
             </div>
             <div className="flex-grow relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-24 z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 h-24 z-10 pointer-events-none" />
+                <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-primary-300 to-transparent z-10 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-primary-300 to-transparent z-10 pointer-events-none" />
 
                 <motion.div
                     ref={containerRef}
-                    className="relative space-y-6" // Use space-y for consistent spacing
+                    className="relative grid grid-cols-2 gap-6"
                     animate={isAnimating ? { y: [0, -animation.height] } : { y: 0 }}
                     transition={isAnimating ? {
                         duration: animation.duration,

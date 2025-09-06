@@ -97,11 +97,11 @@ export default function AllEventsList({ events }: { events: Event[] }) {
     const NONREPEAT_THRESHOLD = new Date(currentTime.getTime() + UP_NEXT_NONREPEAT_MS);
 
     const featuredEvents = events.filter(event => {
-        const startTime = new Date(event.start);
-        if (startTime < currentTime) return false;
+        const eventTime = new Date(event.end || event.start);
+        if (eventTime < currentTime) return false;
 
-        const isRepeatingSoon = event.repeats && startTime <= REPEAT_THRESHOLD;
-        const isOneTimeSoon = !event.repeats && startTime <= NONREPEAT_THRESHOLD;
+        const isRepeatingSoon = event.repeats && eventTime <= REPEAT_THRESHOLD;
+        const isOneTimeSoon = !event.repeats && eventTime <= NONREPEAT_THRESHOLD;
 
         return isRepeatingSoon || isOneTimeSoon;
     }).sort((a, b) => {
@@ -118,7 +118,7 @@ export default function AllEventsList({ events }: { events: Event[] }) {
     const featuredEventIds = new Set(featuredEvents.map(e => e.id));
 
     const otherEvents = events
-        .filter(event => !featuredEventIds.has(event.id) && new Date(event.start) > currentTime)
+        .filter(event => !featuredEventIds.has(event.id) && new Date(event.end || event.start) > currentTime)
         .sort((a, b) => {
             if (!a.repeats && b.repeats) {
                 return -1;
