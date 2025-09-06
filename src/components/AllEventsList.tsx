@@ -9,6 +9,9 @@ import { Calendar, MapPin, Repeat, Star } from 'lucide-react';
 const MAX_DESC_LENGTH = 100;
 const CLOSE_ENOUGH_THRESHOLD = 0.75;
 
+const UP_NEXT_REPEAT_MS = 60 * 60 * 1000; // 1 hour
+const UP_NEXT_NONREPEAT_MS = 14 * 24 * 60 * 60 * 1000; // 2 weeks
+
 function getReasonableSlice(s: string): string {
     let finishedSentence = false;
     const words = s.split(" ");
@@ -31,10 +34,12 @@ function getReasonableSlice(s: string): string {
     return output;
 }
 
-function EventItem({ event }: { event: Event }) {
+function EventItem({ event, isFeatured }: { event: Event, isFeatured?: boolean }) {
     const isOneTime = !event.repeats;
+    const hasGradient = isFeatured || isOneTime;
+
     return (
-        <div className={`mb-4 p-4 rounded-lg ${isOneTime
+        <div className={`mb-4 p-4 rounded-lg ${hasGradient
             ? 'bg-gradient-to-r from-acmorange/20 to-acmorange/10 border-l-4 border-acmorange shadow-lg'
             : 'border-l-3'
             }`}>
@@ -71,69 +76,112 @@ function EventItem({ event }: { event: Event }) {
 }
 
 export default function AllEventsList({ events }: { events: Event[] }) {
-    const oneTimeControls = useAnimation();
-    const repeatingControls = useAnimation();
-    const oneTimeRef = useRef<HTMLDivElement>(null);
-    const repeatingRef = useRef<HTMLDivElement>(null);
-    const [oneTimeHeight, setOneTimeHeight] = useState(0);
-    const [repeatingHeight, setRepeatingHeight] = useState(0);
-
-    const oneTimeEvents = events.filter(e => !e.repeats).sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
-    const repeatingEvents = events.filter(e => e.repeats).sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
-
-    const duplicatedOneTimeEvents = oneTimeEvents.length > 0 ? [...oneTimeEvents, ...oneTimeEvents] : [];
-    const duplicatedRepeatingEvents = repeatingEvents.length > 0 ? [...repeatingEvents, ...repeatingEvents] : [];
+    const featuredControls = useAnimation();
+    const otherControls = useAnimation();
+    const featuredRef = useRef<HTMLDivElement>(null);
+    const otherRef = useRef<HTMLDivElement>(null);
+    const [featuredHeight, setFeaturedHeight] = useState(0);
+    const [otherHeight, setOtherHeight] = useState(0);
+    const [currentTime, setCurrentTime] = useState(new Date());
 
     useEffect(() => {
-        if (oneTimeRef.current && oneTimeEvents.length > 0) {
-            const height = oneTimeRef.current.scrollHeight / 2;
-            const parentHeight = oneTimeRef.current.parentElement?.clientHeight ?? 0;
-            if (height > parentHeight) setOneTimeHeight(height);
-            else setOneTimeHeight(0);
+        const intervalId = setInterval(() => {
+            console.log('refreshing')
+            setCurrentTime(new Date());
+        }, 60 * 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const REPEAT_THRESHOLD = new Date(currentTime.getTime() + UP_NEXT_REPEAT_MS);
+    const NONREPEAT_THRESHOLD = new Date(currentTime.getTime() + UP_NEXT_NONREPEAT_MS);
+
+    const featuredEvents = events.filter(event => {
+        const startTime = new Date(event.start);
+        if (startTime < currentTime) return false;
+
+        const isRepeatingSoon = event.repeats && startTime <= REPEAT_THRESHOLD;
+        const isOneTimeSoon = !event.repeats && startTime <= NONREPEAT_THRESHOLD;
+
+        return isRepeatingSoon || isOneTimeSoon;
+    }).sort((a, b) => {
+        // Keep non-repeating events first in the featured list as well
+        if (!a.repeats && b.repeats) {
+            return -1;
         }
-    }, [oneTimeEvents]);
+        if (a.repeats && !b.repeats) {
+            return 1;
+        }
+        return new Date(a.start).getTime() - new Date(b.start).getTime();
+    });
+
+    const featuredEventIds = new Set(featuredEvents.map(e => e.id));
+
+    const otherEvents = events
+        .filter(event => !featuredEventIds.has(event.id) && new Date(event.start) > currentTime)
+        .sort((a, b) => {
+            if (!a.repeats && b.repeats) {
+                return -1;
+            }
+            if (a.repeats && !b.repeats) {
+                return 1;
+            }
+            return new Date(a.start).getTime() - new Date(b.start).getTime();
+        });
+
+    const duplicatedFeaturedEvents = featuredEvents.length > 0 ? [...featuredEvents, ...featuredEvents] : [];
+    const duplicatedOtherEvents = otherEvents.length > 0 ? [...otherEvents, ...otherEvents] : [];
 
     useEffect(() => {
-        if (oneTimeHeight === 0) {
-            oneTimeControls.stop();
-            oneTimeControls.set({ y: 0 });
+        if (featuredRef.current && featuredEvents.length > 0) {
+            const height = featuredRef.current.scrollHeight / 2;
+            const parentHeight = featuredRef.current.parentElement?.clientHeight ?? 0;
+            if (height > parentHeight) setFeaturedHeight(height);
+            else setFeaturedHeight(0);
+        }
+    }, [featuredEvents]);
+
+    useEffect(() => {
+        if (featuredHeight === 0) {
+            featuredControls.stop();
+            featuredControls.set({ y: 0 });
             return;
         };
         const animate = async () => {
-            await oneTimeControls.set({ y: 0 });
-            await oneTimeControls.start({ y: -oneTimeHeight, transition: { duration: oneTimeHeight / 30, ease: "linear", repeat: Infinity } });
+            await featuredControls.set({ y: 0 });
+            await featuredControls.start({ y: -featuredHeight, transition: { duration: featuredHeight / 30, ease: "linear", repeat: Infinity } });
         };
         animate();
-        return () => oneTimeControls.stop();
-    }, [oneTimeControls, oneTimeHeight]);
+        return () => featuredControls.stop();
+    }, [featuredControls, featuredHeight]);
 
     useEffect(() => {
-        if (repeatingRef.current && repeatingEvents.length > 0) {
-            const height = repeatingRef.current.scrollHeight / 2;
-            const parentHeight = repeatingRef.current.parentElement?.clientHeight ?? 0;
-            if (height > parentHeight) setRepeatingHeight(height);
-            else setRepeatingHeight(0);
+        if (otherRef.current && otherEvents.length > 0) {
+            const height = otherRef.current.scrollHeight / 2;
+            const parentHeight = otherRef.current.parentElement?.clientHeight ?? 0;
+            if (height > parentHeight) setOtherHeight(height);
+            else setOtherHeight(0);
         }
-    }, [repeatingEvents]);
+    }, [otherEvents]);
 
     useEffect(() => {
-        if (repeatingHeight === 0) {
-            repeatingControls.stop();
-            repeatingControls.set({ y: 0 });
+        if (otherHeight === 0) {
+            otherControls.stop();
+            otherControls.set({ y: 0 });
             return;
         }
         const animate = async () => {
-            await repeatingControls.set({ y: 0 });
-            await repeatingControls.start({ y: -repeatingHeight, transition: { duration: repeatingHeight / 30, ease: "linear", repeat: Infinity } });
+            await otherControls.set({ y: 0 });
+            await otherControls.start({ y: -otherHeight, transition: { duration: otherHeight / 30, ease: "linear", repeat: Infinity } });
         };
         animate();
-        return () => repeatingControls.stop();
-    }, [repeatingControls, repeatingHeight]);
+        return () => otherControls.stop();
+    }, [otherControls, otherHeight]);
 
     if (events.length === 0) {
         return (
             <div className="w-full h-full p-6 bg-primary-300/80 flex flex-col">
-                <h2 className="text-3xl font-bold text-white mb-4">All Events</h2>
+                <h2 className="text-5xl font-extrabold text-white">All Events</h2>
                 <div className="flex-1 flex items-center justify-center text-gray-400">No upcoming events</div>
             </div>
         );
@@ -141,42 +189,37 @@ export default function AllEventsList({ events }: { events: Event[] }) {
 
     return (
         <div className="w-full h-full p-6 bg-primary-300/80 flex flex-col">
-            <div className="mb-4">
-                <h2 className="text-3xl font-bold text-white mb-2">All Events</h2>
-                <div className="flex gap-4 text-sm">
-                    {oneTimeEvents.length > 0 && (
-                        <div className="flex items-center gap-1.5"><Star className="text-acmorange" size={14} fill="currentColor" /><span className="text-atomic_tangerine font-medium">{oneTimeEvents.length} One-time</span></div>
-                    )}
-                    {repeatingEvents.length > 0 && (
-                        <div className="flex items-center gap-1.5"><Repeat className="text-acmblue-200" size={14} /><span className="text-acmblue-200 font-medium">{repeatingEvents.length} Repeating</span></div>
-                    )}
-                </div>
-            </div>
+            <h2 className="text-4xl font-extrabold text-white mb-2">All Events</h2>
+
             <div className="flex-1 flex flex-col min-h-0">
-                {oneTimeEvents.length > 0 && (
-                    <div className="flex-shrink-0 max-h-[33.33%] relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
-                        <motion.div ref={oneTimeRef} animate={oneTimeControls}>
-                            {/* MODIFICATION: Conditionally render single or duplicated list */}
-                            {(oneTimeHeight > 0 ? duplicatedOneTimeEvents : oneTimeEvents).map((event, index) => (
-                                <EventItem key={`${event.id}-ot-${index}`} event={event} />
-                            ))}
-                        </motion.div>
-                        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
-                    </div>
+                {featuredEvents.length > 0 && (
+                    <>
+                        <h3 className="text-xl font-semibold mb-2 flex-shrink-0">Up Next</h3>
+                        <div className="flex-shrink-0 max-h-[40%] relative overflow-hidden mb-4">
+                            <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
+                            <motion.div ref={featuredRef} animate={featuredControls}>
+                                {(featuredHeight > 0 ? duplicatedFeaturedEvents : featuredEvents).map((event, index) => (
+                                    <EventItem key={`${event.id}-featured-${index}`} event={event} isFeatured={true} />
+                                ))}
+                            </motion.div>
+                            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
+                        </div>
+                    </>
                 )}
-                {oneTimeEvents.length > 0 && repeatingEvents.length > 0 && <hr className="border-t border-white/10 my-4" />}
-                {repeatingEvents.length > 0 && (
-                    <div className="flex-1 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
-                        <motion.div ref={repeatingRef} animate={repeatingControls}>
-                            {/* MODIFICATION: Conditionally render single or duplicated list */}
-                            {(repeatingHeight > 0 ? duplicatedRepeatingEvents : repeatingEvents).map((event, index) => (
-                                <EventItem key={`${event.id}-rp-${index}`} event={event} />
-                            ))}
-                        </motion.div>
-                        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
-                    </div>
+
+                {otherEvents.length > 0 && (
+                    <>
+                        {featuredEvents.length > 0 && <h3 className="text-xl font-semibold text-acmblue-200 mb-2 flex-shrink-0">Other Events</h3>}
+                        <div className="flex-1 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
+                            <motion.div ref={otherRef} animate={otherControls}>
+                                {(otherHeight > 0 ? duplicatedOtherEvents : otherEvents).map((event, index) => (
+                                    <EventItem key={`${event.id}-other-${index}`} event={event} />
+                                ))}
+                            </motion.div>
+                            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
+                        </div>
+                    </>
                 )}
             </div>
         </div>
