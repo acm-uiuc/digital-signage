@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import FeaturedList from '@/components/FeaturedList';
 import AllEventsList from '@/components/AllEventsList';
 import { Event } from '@/lib/types';
 import { processNextOccurrences } from '@/lib/eventProcessor';
 import useHourlyRefresh from '@/lib/hooks/useHourlyRefresh';
 import { getConfig } from '@/lib/config';
+import Image from 'next/image';
 
-const MAX_FEATURED_ITEMS = 5;
 const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 
 export function EventsPage({ environment }: { environment: string | null | undefined }) {
     const [allEvents, setAllEvents] = useState<Event[] | null | undefined>(undefined);
     const config = useMemo(() => getConfig(environment || 'default'), [environment]);
+
     useHourlyRefresh();
 
     useEffect(() => {
@@ -32,7 +33,6 @@ export function EventsPage({ environment }: { environment: string | null | undef
         };
 
         fetchAndProcessEvents();
-
         const interval = setInterval(fetchAndProcessEvents, REFRESH_EVERY_SECONDS * 1000);
         return () => clearInterval(interval);
     }, [config]);
@@ -49,26 +49,39 @@ export function EventsPage({ environment }: { environment: string | null | undef
         );
     }
 
-    const repeatingEvents = allEvents.filter(e => e.repeats && !e.featured);
-    const oneTimeEvents = allEvents.filter(e => !e.repeats && !e.featured);
-    const featuredListEvents = allEvents.filter(e => e.featured).slice(0, MAX_FEATURED_ITEMS);
+    const featuredEvents = allEvents.filter(e => e.featured);
+    const nonFeaturedEvents = allEvents.filter(e => !e.featured);
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-acmblue" key={environment}>
+        <div className="flex flex-col h-screen overflow-hidden" key={environment}>
             <main className="flex flex-grow min-h-0">
-                <div className={`w-2/3 overflow-y-auto`}>
-                    <FeaturedList events={featuredListEvents} hideAcmLogo={config.hideAcmLogo} />
+                <div className={`w-2/3 overflow-hidden ${config.hideRightBar ? "" : "border-r"}`}>
+                    <FeaturedList events={featuredEvents} />
                 </div>
-                {!config.hideRightBar && <div className={`w-1/3 overflow-y-auto`}>
-                    <AllEventsList
-                        repeatingEvents={repeatingEvents}
-                        oneTimeEvents={oneTimeEvents}
-                    />
-                </div>}
+
+                {!config.hideRightBar && (
+                    <div className="w-1/3 overflow-hidden">
+                        <AllEventsList events={nonFeaturedEvents} />
+                    </div>
+                )}
             </main>
+
+            {!config.hideAcmLogo && (
+                <div className="flex w-full items-center bg-acmblue-900 pt-4 pl-8 pb-4 border-t">
+                    <Image
+                        src="https://static.acm.illinois.edu/banner-white.png"
+                        alt="ACM @ UIUC Logo"
+                        unoptimized
+                        width={100}
+                        height={50}
+                        className="rounded-lg"
+                    />
+                </div>
+            )}
+
             {config.bottomGutterHeight && (
                 <div
-                    className="flex w-full bg-acmblue"
+                    className="flex w-full"
                     style={{ height: config.bottomGutterHeight }}
                 />
             )}
