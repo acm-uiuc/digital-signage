@@ -38,7 +38,7 @@ jobs:
         run: yarn install -D --frozen-lockfile
 
       - name: Build with OpenNext
-        run: yarn build && npx opennextjs-cloudflare build
+        run: npx opennextjs-cloudflare build
 
       - name: Deploy to Cloudflare
         id: deploy
@@ -46,7 +46,7 @@ jobs:
         with:
           apiToken: ${{ secrets.PAGES_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --outdir .open-next/ --no-bundle
+          command: deploy
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find Comment
