@@ -37,14 +37,6 @@ jobs:
       - name: Install dependencies
         run: yarn install -D --frozen-lockfile
 
-      - name: Cache OpenNext
-        uses: actions/cache@v4
-        with:
-          path: .open-next
-          key: opennext-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            opennext-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
-
       - name: Build with OpenNext
         run: yarn build
 
