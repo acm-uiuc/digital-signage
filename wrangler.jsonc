@@ -17,4 +17,5 @@
       "service": "acmuiuc-digital-signage",
     },
   ],
+  "preview_urls": true
 }
