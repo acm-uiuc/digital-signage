@@ -24,8 +24,18 @@ jobs:
           node-version: 22.x
           cache: "yarn"
 
+      - name: Restore Yarn Cache
+        uses: actions/cache@v4
+        with:
+          path: | 
+            node_modules/
+            ${{ github.workspace }}/.next/cache
+          key: yarn-modules-${{ runner.arch }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-dev
+          restore-keys: |
+            yarn-modules-${{ runner.arch }}-${{ runner.os }}-
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install -D --frozen-lockfile
 
       - name: Cache OpenNext
         uses: actions/cache@v4
