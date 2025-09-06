@@ -24,20 +24,19 @@ jobs:
           node-version: 22.x
           cache: "yarn"
 
-      - name: Restore Yarn Cache
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Cache OpenNext
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: yarn-modules-${{ runner.arch }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-dev
+          path: .open-next
+          key: opennext-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
-            yarn-modules-${{ runner.arch }}-${{ runner.os }}-
+            opennext-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
 
-
-      - name: Install dependencies
-        run: yarn -D
-
-      - name: Build website
-        run: yarn build
+      - name: Build with OpenNext
+        run: yarn opennextjs-cloudflare build
 
       - name: Deploy to Cloudflare
         id: deploy
@@ -45,7 +44,7 @@ jobs:
         with:
           apiToken: ${{ secrets.PAGES_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out/ --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.head_ref || github.ref_name }}
+          command: opennextjs-cloudflare deploy --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find Comment
@@ -57,12 +56,6 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: Cloudflare Pages
 
-      - uses: austenstone/job-summary-to-pdf@0c3b6d3b0b883b058c2c6843c142c8026b6b34be
-        if: github.event_name == 'pull_request'
-        id: job-summary
-        with:
-          create-pdf: false
-
       - name: Update PR with Preview URL
         if: success() && github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
@@ -70,7 +63,9 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ steps.job-summary.outputs.job-summary }}
+          body: |
+            ⚡️ **Cloudflare Pages Preview**
+            Preview URL: ${{ steps.deploy.outputs.url }}
           edit-mode: "replace"
 
       - name: Update PR with Failure

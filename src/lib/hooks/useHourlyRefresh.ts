@@ -6,7 +6,7 @@ const useHourlyRefresh = () => {
         const getTimeout = () => {
             const now = new Date();
             const target = new Date(now);
-            target.setHours(now.getHours() + 4, 0, 0, 0);
+            target.setHours(now.getHours() + 2, 0, 0, 0);
             return target.getTime() - now.getTime();
         };
 

@@ -2,18 +2,17 @@ export interface AppConfig {
     bottomGutterHeight?: string
     hideRightBar?: boolean
     hideAcmLogo?: boolean
-    hideMemeOfTheDay?: boolean
+    hideContentOfTheDay?: boolean
 }
 
 export const defaultConfig: AppConfig = {
-    hideMemeOfTheDay: true // WARNING: THESE MEMES SUCK!! THE API IS BAD!!
 };
 
 export const solsticeConfig: AppConfig = {
     bottomGutterHeight: '30px',
     hideRightBar: true,
     hideAcmLogo: true,
-    hideMemeOfTheDay: true
+    hideContentOfTheDay: true
 };
 
 export const configs = {
