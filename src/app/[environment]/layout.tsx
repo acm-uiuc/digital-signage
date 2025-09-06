@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ACM @ UIUC",
-  description: "ACM @ UIUC Display",
+  title: "Digital Signage",
+  description: "ACM @ UIUC Digital Signage",
+  authors: [{ name: "ACM @ UIUC Team", url: "https://acm.illinois.edu" }]
 };
 
 export const viewport: Viewport = {
