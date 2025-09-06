@@ -8,6 +8,7 @@ import { processNextOccurrences } from '@/lib/eventProcessor';
 import useHourlyRefresh from '@/lib/hooks/useHourlyRefresh';
 import { getConfig } from '@/lib/config';
 import Image from 'next/image';
+import { Globe } from 'lucide-react';
 
 const REFRESH_EVERY_SECONDS = 60 * 2; // every 2 minutes
 
@@ -67,15 +68,31 @@ export function EventsPage({ environment }: { environment: string | null | undef
             </main>
 
             {!config.hideAcmLogo && (
-                <div className="flex w-full items-center bg-acmblue-900 pt-4 pl-8 pb-4 border-t">
-                    <Image
-                        src="https://static.acm.illinois.edu/banner-white.png"
-                        alt="ACM @ UIUC Logo"
-                        unoptimized
-                        width={100}
-                        height={50}
-                        className="rounded-lg"
-                    />
+                <div className="flex flex-col w-full items-center justify-center bg-acmblue-900 pt-4 pb-4 border-t space-y-4">
+                    <div className="flex items-center space-x-4">
+                        <Image
+                            src="https://static.acm.illinois.edu/banner-white.png"
+                            alt="ACM @ UIUC Logo"
+                            unoptimized
+                            width={100}
+                            height={50}
+                            className="rounded-lg"
+                        />
+                        <p className="text-white text-lg font-semibold">The largest computer science organization at UIUC</p>
+                    </div>
+                    <div className="flex items-center space-x-2 font-mono text-white">
+                        <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline ">
+                            acm.illinois.edu
+                        </a>
+                        <span>|</span>
+                        <a href="https://go.acm.illinois.edu/discord" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                            go.acm.illinois.edu/discord
+                        </a>
+                        <span>|</span>
+                        <a href="https://www.instagram.com/acm.uiuc/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                            instagram.com/acm.uiuc
+                        </a>
+                    </div>
                 </div>
             )}
 
