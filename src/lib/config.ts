@@ -12,7 +12,6 @@ export const solsticeConfig: AppConfig = {
     bottomGutterHeight: '30px',
     hideRightBar: true,
     hideAcmLogo: true,
-    hideContentOfTheDay: true
 };
 
 export const configs = {
