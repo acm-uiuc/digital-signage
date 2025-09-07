@@ -89,14 +89,13 @@ export default async function PaperOfTheDay() {
         return (
             <>
                 <h1 className="ml-5 text-2xl font-extrabold text-white mb-2">Featured Paper</h1>
-                <div className="mr-5 ml-5 p-3 bg-slate-700 rounded-lg h-full flex flex-col text-white overflow-hidden line-clamp-3 text-ellipsis">
-                    {/* Display the broader theme name */}
+                <div className="mr-5 ml-5 p-3 bg-slate-800 rounded-lg h-full flex flex-col text-white overflow-hidden line-clamp-3 text-ellipsis">
                     <h2 className="text-sm font-bold text-acmblue-200 mb-1">{theme.name}</h2>
-                    <h3 className="text-md font-bold leading-tight mb-1">{paper.title}</h3>
-                    <p className="text-xs text-gray-400 mb-3 italic">
+                    <h3 className="text-md font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
+                    <p className="text-xs text-gray-200 mb-2 italic">
                         {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
                     </p>
-                    <p className="flex-grow text-sm text-gray-300 overflow-hidden text-ellipsis line-clamp-4">
+                    <p className="flex-grow text-sm text-white overflow-hidden text-ellipsis line-clamp-4">
                         <Latex>{paper.summary}</Latex>
                     </p>
                     <a
