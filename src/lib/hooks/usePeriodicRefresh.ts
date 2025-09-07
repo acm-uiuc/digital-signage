@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 
-const useHourlyRefresh = () => {
+const usePeriodicRefresh = () => {
     useEffect(() => {
         const getTimeout = () => {
             const now = new Date();
@@ -21,4 +21,4 @@ const useHourlyRefresh = () => {
     }, []);
 };
 
-export default useHourlyRefresh;
+export default usePeriodicRefresh;

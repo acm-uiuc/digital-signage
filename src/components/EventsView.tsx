@@ -5,7 +5,7 @@ import FeaturedList from '@/components/FeaturedList';
 import AllEventsList from '@/components/AllEventsList';
 import { Event } from '@/lib/types';
 import { processNextOccurrences } from '@/lib/eventProcessor';
-import useHourlyRefresh from '@/lib/hooks/useHourlyRefresh';
+import usePeriodicRefresh from '@/lib/hooks/usePeriodicRefresh';
 import { getConfig } from '@/lib/config';
 import Image from 'next/image';
 
@@ -21,7 +21,7 @@ export function EventsView({
     const [allEvents, setAllEvents] = useState<Event[] | null | undefined>(undefined);
     const config = useMemo(() => getConfig(environment || 'default'), [environment]);
 
-    useHourlyRefresh();
+    usePeriodicRefresh();
 
     useEffect(() => {
         const fetchAndProcessEvents = async () => {
