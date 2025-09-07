@@ -62,16 +62,13 @@ export function EventsView({
         <div className="flex flex-col h-screen overflow-hidden" key={environment}>
             <main className="flex flex-grow min-h-0">
                 <div className={`w-2/3 flex flex-col ${config.hideRightBar ? "" : "border-r"}`}>
-                    <div className="h-8/12 min-h-0 overflow-y-auto">
+                    <div className="flex-1 overflow-y-auto">
                         <FeaturedList events={featuredEvents} key={JSON.stringify(config)} />
                     </div>
 
-
                     {!config.hideContentOfTheDay && (
-                        <div className="min-h-1/4 max-h-1/3 flex space-x-4">
-                            <div className="flex-1">
-                                {paperComponent}
-                            </div>
+                        <div className="mt-auto">
+                            {paperComponent}
                         </div>
                     )}
                 </div>

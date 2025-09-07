@@ -1,6 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
+import QRCode from 'react-qr-code';
 
 interface Paper {
     title: string;
@@ -89,23 +90,30 @@ export default async function PaperOfTheDay() {
         return (
             <>
                 <h1 className="ml-5 text-2xl font-extrabold text-white mb-2">Featured Paper</h1>
-                <div className="mr-5 ml-5 p-3 bg-slate-800 rounded-lg h-full flex flex-col text-white overflow-hidden line-clamp-3 text-ellipsis">
-                    <h2 className="text-sm font-bold text-acmblue-200 mb-1">{theme.name}</h2>
-                    <h3 className="text-md font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
-                    <p className="text-xs text-gray-200 mb-2 italic">
-                        {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
-                    </p>
-                    <p className="flex-grow text-sm text-white overflow-hidden text-ellipsis line-clamp-4">
-                        <Latex>{paper.summary}</Latex>
-                    </p>
-                    <a
-                        href={paper.url_abstract}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 bg-acmblue-500 hover:bg-acmblue-600 text-white font-semibold py-2 rounded transition-colors duration-300 text-sm"
-                    >
-                        {paper.url_abstract}
-                    </a>
+                <div className="flex mr-5 ml-5 p-3 bg-slate-800 rounded-lg text-white mb-2">
+                    <div className="flex flex-col flex-grow overflow-hidden pr-3">
+                        <h2 className="text-sm font-bold text-acmblue-200 mb-1">{theme.name}</h2>
+                        <h3 className="text-md font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
+                        <p className="text-xs text-gray-200 mb-2 italic">
+                            {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
+                        </p>
+                        <p className="flex-grow text-sm text-white overflow-hidden text-ellipsis line-clamp-6">
+                            <Latex>{paper.summary}</Latex>
+                        </p>
+                    </div>
+                    <div className="flex-shrink-0 flex flex-col items-center justify-center pl-3 border-l border-gray-700">
+                        <a href={paper.url_pdf} target="_blank" rel="noopener noreferrer" title="Download PDF">
+                            <QRCode
+                                value={paper.url_pdf}
+                                size={140}
+                                fgColor="#ffffff"
+                                bgColor="#1e293b"
+                            />
+                        </a>
+                        <p className="text-xs text-gray-200 mt-2 text-center font-mono">
+                            Scan to open PDF
+                        </p>
+                    </div>
                 </div>
             </>
         );
