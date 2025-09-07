@@ -9,7 +9,7 @@ export const defaultConfig: AppConfig = {
 };
 
 export const solsticeConfig: AppConfig = {
-    bottomGutterHeight: '30px',
+    bottomGutterHeight: '50px',
     hideRightBar: true,
     hideAcmLogo: true,
 };
