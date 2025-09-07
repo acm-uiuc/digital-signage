@@ -6,7 +6,7 @@ import { Event } from '@/lib/types';
 import { getInformalRepeatString } from '@/lib/eventProcessor';
 import { Calendar, MapPin, Repeat, Star } from 'lucide-react';
 
-const MAX_DESC_LENGTH = 100;
+const MAX_DESC_LENGTH = 80; // Reduced from 100
 const CLOSE_ENOUGH_THRESHOLD = 0.75;
 
 const UP_NEXT_REPEAT_MS = 60 * 60 * 1000; // 1 hour
@@ -39,35 +39,35 @@ function EventItem({ event, isFeatured }: { event: Event, isFeatured?: boolean }
     const hasGradient = isFeatured || isOneTime;
 
     return (
-        <div className={`mb-4 p-4 rounded-lg ${hasGradient
-            ? 'bg-gradient-to-r from-acmorange/20 to-acmorange/10 border-l-4 border-acmorange shadow-lg'
-            : 'border-l-3'
+        <div className={`mb-3 p-3 rounded-lg ${hasGradient // Reduced mb and p
+            ? 'bg-gradient-to-r from-acmorange/20 to-acmorange/10 border-l-2 border-acmorange shadow-lg' // Reduced border
+            : 'border-l-2' // Reduced border
             }`}>
             <div className="flex items-start justify-between">
                 <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                        {isOneTime && <Star className="text-acmorange" size={14} fill="currentColor" />}
-                        <h3 className="text-base font-bold text-white">{event.title}</h3>
+                    <div className="flex items-center gap-1.5 mb-0.5"> {/* Reduced gap and mb */}
+                        {isOneTime && <Star className="text-acmorange" size={12} fill="currentColor" />} {/* Reduced size */}
+                        <h3 className="text-sm font-bold text-white">{event.title}</h3> {/* Reduced text size */}
                     </div>
-                    <div className="flex items-center gap-2 text-base mb-2">
+                    <div className="flex items-center gap-1.5 text-sm mb-1.5"> {/* Reduced gap, text size, mb */}
                         <span className={`font-semibold text-secondary-700`}>
                             {event.host}
                         </span>
                         {event.repeats && (
                             <div className="flex items-center gap-1 text-acmblue-200 font-medium">
-                                <Repeat size={10} />
+                                <Repeat size={8} /> {/* Reduced size */}
                                 <span>{getInformalRepeatString(event.repeats)}</span>
                             </div>
                         )}
                     </div>
-                    <p className="text-base text-gray-300 mb-2 line-clamp-2">
+                    <p className="text-sm text-gray-300 mb-1.5 line-clamp-2"> {/* Reduced text size, mb */}
                         {getReasonableSlice(event.description)}
                     </p>
-                    <div className="flex flex-wrap gap-3 text-xs text-vista_blue-600">
-                        <span className="flex items-center gap-1"><Calendar size={10} />
+                    <div className="flex flex-wrap gap-2.5 text-xs text-vista_blue-600"> {/* Reduced gap */}
+                        <span className="flex items-center gap-1"><Calendar size={8} /> {/* Reduced size */}
                             {new Date(event.start).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' })}
                         </span>
-                        <span className="flex items-center gap-1"><MapPin size={10} />{event.location}</span>
+                        <span className="flex items-center gap-1"><MapPin size={8} />{event.location}</span> {/* Reduced size */}
                     </div>
                 </div>
             </div>
@@ -105,13 +105,8 @@ export default function AllEventsList({ events }: { events: Event[] }) {
 
         return isRepeatingSoon || isOneTimeSoon;
     }).sort((a, b) => {
-        // Keep non-repeating events first in the featured list as well
-        if (!a.repeats && b.repeats) {
-            return -1;
-        }
-        if (a.repeats && !b.repeats) {
-            return 1;
-        }
+        if (!a.repeats && b.repeats) return -1;
+        if (a.repeats && !b.repeats) return 1;
         return new Date(a.start).getTime() - new Date(b.start).getTime();
     });
 
@@ -120,12 +115,8 @@ export default function AllEventsList({ events }: { events: Event[] }) {
     const otherEvents = events
         .filter(event => !featuredEventIds.has(event.id) && new Date(event.end || event.start) > currentTime)
         .sort((a, b) => {
-            if (!a.repeats && b.repeats) {
-                return -1;
-            }
-            if (a.repeats && !b.repeats) {
-                return 1;
-            }
+            if (!a.repeats && b.repeats) return -1;
+            if (a.repeats && !b.repeats) return 1;
             return new Date(a.start).getTime() - new Date(b.start).getTime();
         });
 
@@ -180,44 +171,44 @@ export default function AllEventsList({ events }: { events: Event[] }) {
 
     if (events.length === 0) {
         return (
-            <div className="w-full h-full p-6 bg-primary-300/80 flex flex-col">
-                <h2 className="text-5xl font-extrabold text-white">All Events</h2>
+            <div className="w-full h-full p-5 bg-primary-300/80 flex flex-col"> {/* Reduced p */}
+                <h2 className="text-4xl font-extrabold text-white">All Events</h2> {/* Reduced text size */}
                 <div className="flex-1 flex items-center justify-center text-gray-400">No upcoming events</div>
             </div>
         );
     }
 
     return (
-        <div className="w-full h-full p-6 bg-primary-300/80 flex flex-col">
-            <h2 className="text-4xl font-extrabold text-white mb-2">All Events</h2>
+        <div className="w-full h-full p-5 bg-primary-300/80 flex flex-col"> {/* Reduced p */}
+            <h2 className="text-3xl font-extrabold text-white mb-1.5">All Events</h2> {/* Reduced text size, mb */}
 
             <div className="flex-1 flex flex-col min-h-0">
                 {featuredEvents.length > 0 && (
                     <>
-                        <h3 className="text-xl font-semibold mb-2 flex-shrink-0">Up Next</h3>
-                        <div className="flex-shrink-0 max-h-[40%] relative overflow-hidden mb-4">
-                            <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
+                        <h3 className="text-lg font-semibold mb-1.5 flex-shrink-0">Up Next</h3> {/* Reduced text size, mb */}
+                        <div className="flex-shrink-0 max-h-[40%] relative overflow-hidden mb-3"> {/* Reduced mb */}
+                            <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-primary-300/80 to-transparent z-10" /> {/* Reduced h */}
                             <motion.div ref={featuredRef} animate={featuredControls}>
                                 {(featuredHeight > 0 ? duplicatedFeaturedEvents : featuredEvents).map((event, index) => (
                                     <EventItem key={`${event.id}-featured-${index}`} event={event} isFeatured={true} />
                                 ))}
                             </motion.div>
-                            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
+                            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-primary-300/80 to-transparent z-10" /> {/* Reduced h */}
                         </div>
                     </>
                 )}
 
                 {otherEvents.length > 0 && (
                     <>
-                        {featuredEvents.length > 0 && <h3 className="text-xl font-semibold text-acmblue-200 mb-2 flex-shrink-0">Other Events</h3>}
+                        {featuredEvents.length > 0 && <h3 className="text-lg font-semibold text-acmblue-200 mb-1.5 flex-shrink-0">Other Events</h3>}
                         <div className="flex-1 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
+                            <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
                             <motion.div ref={otherRef} animate={otherControls}>
                                 {(otherHeight > 0 ? duplicatedOtherEvents : otherEvents).map((event, index) => (
                                     <EventItem key={`${event.id}-other-${index}`} event={event} />
                                 ))}
                             </motion.div>
-                            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
+                            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-primary-300/80 to-transparent z-10" />
                         </div>
                     </>
                 )}

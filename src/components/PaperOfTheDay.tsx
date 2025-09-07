@@ -1,5 +1,8 @@
-// NO "use client" HERE!
+
 import { XMLParser } from 'fast-xml-parser';
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 
 interface Paper {
     title: string;
@@ -64,24 +67,27 @@ export default async function PaperOfTheDay() {
         };
 
         return (
-            <div className="p-4 bg-gray-800 rounded-lg h-full flex flex-col text-white">
-                <h2 className="text-sm font-bold text-acmblue-200 mb-1">{category.name}</h2>
-                <h3 className="text-md font-bold leading-tight mb-2">{paper.title}</h3>
-                <p className="text-xs text-gray-400 mb-3 italic">
-                    {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
-                </p>
-                <p className="flex-grow text-sm text-gray-300 overflow-hidden text-ellipsis">
-                    {paper.summary}
-                </p>
-                <a
-                    href={paper.url_abstract}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 text-center bg-acmblue-500 hover:bg-acmblue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
-                >
-                    {paper.url_abstract}
-                </a>
-            </div>
+            <>
+                <h1 className="text-2xl font-extrabold text-white text-center mb-2">Featured Paper</h1>
+                <div className="mr-2 ml-2 p-3 bg-slate-700 rounded-lg h-full flex flex-col text-white overflow-hidden line-clamp-3 text-ellipsis">
+                    <h2 className="text-sm font-bold text-acmblue-200 mb-1">{category.name}</h2>
+                    <h3 className="text-md font-bold leading-tight mb-2">{paper.title}</h3>
+                    <p className="text-xs text-gray-400 mb-3 italic">
+                        {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
+                    </p>
+                    <p className="flex-grow text-sm text-gray-300 overflow-hidden text-ellipsis line-clamp-3">
+                        <Latex>{paper.summary}</Latex>
+                    </p>
+                    <a
+                        href={paper.url_abstract}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 bg-acmblue-500 hover:bg-acmblue-600 text-white font-bold py-2 rounded transition-colors duration-300"
+                    >
+                        {paper.url_abstract}
+                    </a>
+                </div>
+            </>
         );
 
     } catch (error: unknown) {

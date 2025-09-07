@@ -61,68 +61,69 @@ export function EventsView({
     return (
         <div className="flex flex-col h-screen overflow-hidden" key={environment}>
             <main className="flex flex-grow min-h-0">
-                {/* 1. This container is now a vertical flexbox */}
                 <div className={`w-2/3 flex flex-col ${config.hideRightBar ? "" : "border-r"}`}>
-                    {/* 2. This div will now grow and scroll */}
-                    <div className="flex-grow min-h-0 overflow-y-auto">
+                    <div className="h-8/12 min-h-0 overflow-y-auto">
                         <FeaturedList events={featuredEvents} key={JSON.stringify(config)} />
                     </div>
 
+
                     {!config.hideContentOfTheDay && (
-                        <div className="h-1/3 flex p-4 space-x-4 flex-shrink-0">
-                            <div className="w-full h-full flex flex-col">
-                                <h1 className="text-3xl font-extrabold text-white text-center mb-2">Featured Paper</h1>
-                                <div className="flex-1">
-                                    {paperComponent}
-                                </div>
+                        <div className="min-h-1/4 max-h-1/3 flex space-x-4">
+                            <div className="flex-1">
+                                {paperComponent}
                             </div>
                         </div>
                     )}
                 </div>
 
-                {!config.hideRightBar && (
-                    <div className="w-1/3 overflow-hidden">
-                        <AllEventsList events={nonFeaturedEvents} key={JSON.stringify(config)} />
-                    </div>
-                )}
-            </main>
+                {
+                    !config.hideRightBar && (
+                        <div className="w-1/3 overflow-hidden">
+                            <AllEventsList events={nonFeaturedEvents} key={JSON.stringify(config)} />
+                        </div>
+                    )
+                }
+            </main >
 
-            {/* The footer section below is unchanged */}
-            {!config.hideAcmLogo && (
-                <div className="flex flex-col w-full items-center justify-center bg-acmblue-900 pt-2 pb-4 border-t space-y-4">
-                    <div className="flex items-center space-x-4">
-                        <Image
-                            src="https://static.acm.illinois.edu/banner-white.png"
-                            alt="ACM @ UIUC Logo"
-                            unoptimized
-                            width={100}
-                            height={50}
-                            className="rounded-lg"
-                        />
-                        <p className="text-white text-lg font-semibold">The largest computer science organization at UIUC</p>
+            {
+                !config.hideAcmLogo && (
+                    <div className="flex flex-col w-full items-center justify-center bg-acmblue-900 border-t h-1/4">
+                        <div className="flex items-center space-x-4">
+                            <Image
+                                src="https://static.acm.illinois.edu/banner-white.png"
+                                alt="ACM @ UIUC Logo"
+                                unoptimized
+                                width={60}
+                                height={30}
+                                className="rounded-lg"
+                            />
+                            <p className="text-sm text-white font-semibold">The largest computer science organization at UIUC</p>
+                        </div>
+                        <div className="flex items-center space-x-2 font-mono text-white text-xs">
+                            <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline ">
+                                acm.illinois.edu
+                            </a>
+                            <span>|</span>
+                            <a href="https://go.acm.illinois.edu/discord" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                go.acm.illinois.edu/discord
+                            </a>
+                            <span>|</span>
+                            <a href="https://www.instagram.com/acm.uiuc/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                instagram.com/acm.uiuc
+                            </a>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2 font-mono text-white">
-                        <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline ">
-                            acm.illinois.edu
-                        </a>
-                        <span>|</span>
-                        <a href="https://go.acm.illinois.edu/discord" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                            go.acm.illinois.edu/discord
-                        </a>
-                        <span>|</span>
-                        <a href="https://www.instagram.com/acm.uiuc/" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                            instagram.com/acm.uiuc
-                        </a>
-                    </div>
-                </div>
-            )}
+                )
+            }
 
-            {config.bottomGutterHeight && (
-                <div
-                    className="flex w-full"
-                    style={{ height: config.bottomGutterHeight }}
-                />
-            )}
-        </div>
+            {
+                config.bottomGutterHeight && (
+                    <div
+                        className="flex w-full"
+                        style={{ height: config.bottomGutterHeight }}
+                    />
+                )
+            }
+        </div >
     );
 }
