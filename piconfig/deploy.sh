@@ -20,6 +20,7 @@ else
     echo "Error: User '$USER' not found."
     exit 1
 fi
+timedatectl set-timezone America/Chicago
 apt-get purge -y lightdm labwc xorg
 apt-get install -y --no-install-recommends unclutter
 apt-get install -y cage seatd
