@@ -6,29 +6,30 @@ import { Calendar, MapPin, Repeat, Users } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { getInformalRepeatString } from '@/lib/eventProcessor';
 
-const SCROLL_SPEED_PX_PER_SEC = 32; // Reduced from 40
+const SCROLL_SPEED_PX_PER_SEC = 32;
 
 function EventCard({ event }: { event: Event }) {
     return (
-        <div className="relative w-full p-5 space-y-2.5 bg-acmblue-400/50 border border-acmblue-300 rounded-lg shadow-lg drop-shadow-lg"> {/* Reduced padding and spacing */}
+        // Increased padding and spacing
+        <div className="relative w-full p-6 space-y-3.5 bg-acmblue-400/50 border border-acmblue-300 rounded-lg shadow-lg drop-shadow-lg">
             {event.host !== "ACM" && (
-                <div className="absolute top-3 right-3 text-xs font-bold px-2 py-0.5 rounded-full">
-                    <p className="text-base font-semibold tracking-wide flex items-center gap-1.5">
-                        <Users size={16} /> {event.host}
+                <div className="absolute top-4 right-4 text-sm font-bold px-3 py-1 rounded-full">
+                    <p className="text-lg font-semibold tracking-wide flex items-center gap-2">
+                        <Users size={20} /> {event.host}
                     </p>
                 </div>
             )}
-            <h2 className="text-xl font-semibold text-white">{event.title}</h2> {/* Reduced text size */}
-            <p className="text-sm font-normal text-white">{event.description}</p> {/* Reduced text size */}
-            <div className="text-vista_blue-700 text-sm pt-0.5 space-y-1.5"> {/* Reduced text size, padding, spacing */}
-                <p className="flex items-center gap-2.5"><Calendar size={14} /> <span>{new Date(event.start).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' })}</span></p> {/* Reduced size, gap */}
+            <h2 className="text-2xl font-semibold text-white">{event.title}</h2>
+            <p className="text-base font-normal text-white">{event.description}</p>
+            <div className="text-vista_blue-700 text-base pt-1 space-y-2">
+                <p className="flex items-center gap-3"><Calendar size={18} /> <span>{new Date(event.start).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' })}</span></p>
                 {event.repeats && (
-                    <div className="flex items-center gap-2.5"> {/* Reduced gap */}
-                        <Repeat size={14} /> {/* Reduced size */}
+                    <div className="flex items-center gap-3">
+                        <Repeat size={18} />
                         <span>{getInformalRepeatString(event.repeats)}</span>
                     </div>
                 )}
-                <p className="flex items-center gap-2.5"><MapPin size={14} /> <span>{event.location}</span></p> {/* Reduced size, gap */}
+                <p className="flex items-center gap-3"><MapPin size={18} /> <span>{event.location}</span></p>
             </div>
         </div>
     );
@@ -62,19 +63,25 @@ export default function FeaturedList({ events }: { events: Event[] }) {
     const eventList = isAnimating ? [...events, ...events] : events;
 
     return (
-        <div className="w-full h-full p-6 flex flex-col"> {/* Reduced padding */}
-            <div className="pb-6"> {/* Reduced padding */}
-                <div className="flex items-center gap-5"> {/* Reduced gap */}
-                    <h1 className="text-4xl font-extrabold text-white">Featured Events</h1> {/* Reduced text size */}
+        // Increased padding
+        <div className="w-full h-full p-8 flex flex-col">
+            {/* Increased padding */}
+            <div className="pb-8">
+                {/* Increased gap */}
+                <div className="flex items-center gap-6">
+                    {/* Increased text size */}
+                    <h1 className="text-5xl font-extrabold text-white">Featured Events</h1>
                 </div>
             </div>
             <div className="flex-grow relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-primary-300 to-transparent z-10 pointer-events-none" /> {/* Reduced height */}
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-primary-300 to-transparent z-10 pointer-events-none" /> {/* Reduced height */}
+                {/* Increased gradient height */}
+                <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-primary-300 to-transparent z-10 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-primary-300 to-transparent z-10 pointer-events-none" />
 
                 <motion.div
                     ref={containerRef}
-                    className="relative grid grid-cols-2 gap-5" /* Reduced gap */
+                    // Increased gap
+                    className="relative grid grid-cols-2 gap-6"
                     animate={isAnimating ? { y: [0, -animation.height] } : { y: 0 }}
                     transition={isAnimating ? {
                         duration: animation.duration,

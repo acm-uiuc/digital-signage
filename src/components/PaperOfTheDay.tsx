@@ -89,28 +89,28 @@ export default async function PaperOfTheDay() {
 
         return (
             <>
-                <h1 className="ml-5 text-2xl font-extrabold text-white mb-2">Featured Paper</h1>
-                <div className="flex mr-5 ml-5 p-3 bg-slate-800 rounded-lg text-white mb-2">
-                    <div className="flex flex-col flex-grow overflow-hidden pr-3">
-                        <h2 className="text-sm font-bold text-acmblue-200 mb-1">{theme.name}</h2>
-                        <h3 className="text-md font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
-                        <p className="text-xs text-gray-200 mb-2 italic">
+                <h1 className="ml-6 text-3xl font-extrabold text-white mb-3">Featured Paper</h1>
+                <div className="flex mr-6 ml-6 p-4 bg-slate-800 rounded-lg text-white mb-3">
+                    <div className="flex flex-col flex-grow overflow-hidden pr-4">
+                        <h2 className="text-base font-bold text-acmblue-200 mb-2">{theme.name}</h2>
+                        <h3 className="text-lg font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
+                        <p className="text-sm text-gray-200 mb-3 italic">
                             {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
                         </p>
-                        <p className="flex-grow text-sm text-white overflow-hidden text-ellipsis line-clamp-6">
+                        <p className="flex-grow text-base text-white overflow-hidden text-ellipsis line-clamp-6">
                             <Latex>{paper.summary}</Latex>
                         </p>
                     </div>
-                    <div className="flex-shrink-0 flex flex-col items-center justify-center pl-3 border-l border-gray-700">
+                    <div className="flex-shrink-0 flex flex-col items-center justify-center pl-4 border-l border-gray-700">
                         <a href={paper.url_pdf} target="_blank" rel="noopener noreferrer" title="Download PDF">
                             <QRCode
                                 value={paper.url_pdf}
-                                size={140}
+                                size={175}
                                 fgColor="#ffffff"
                                 bgColor="#1e293b"
                             />
                         </a>
-                        <p className="text-xs text-gray-200 mt-2 text-center font-mono">
+                        <p className="text-sm text-gray-200 mt-3 text-center font-mono">
                             Scan to open PDF
                         </p>
                     </div>
@@ -121,9 +121,9 @@ export default async function PaperOfTheDay() {
     } catch (error: unknown) {
         console.error("Failed to fetch daily paper:", error);
         return (
-            <div className="p-4 bg-gray-800 rounded-lg h-full flex flex-col text-white items-center justify-center">
-                <p className="text-center text-red-400">Could not load paper.</p>
-                {error instanceof Error && <p className="text-xs text-gray-500 mt-2">{error.message}</p>}
+            <div className="p-5 bg-gray-800 rounded-lg h-full flex flex-col text-white items-center justify-center">
+                <p className="text-lg text-center text-red-400">Could not load paper.</p>
+                {error instanceof Error && <p className="text-sm text-gray-500 mt-3">{error.message}</p>}
             </div>
         );
     }

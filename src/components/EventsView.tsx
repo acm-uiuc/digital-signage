@@ -85,18 +85,18 @@ export function EventsView({
             {
                 !config.hideAcmLogo && (
                     <div className="flex flex-col w-full items-center justify-center bg-acmblue-900 border-t h-1/4">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 mt-2">
                             <Image
                                 src="https://static.acm.illinois.edu/banner-white.png"
                                 alt="ACM @ UIUC Logo"
                                 unoptimized
-                                width={60}
-                                height={30}
+                                width={80}
+                                height={40}
                                 className="rounded-lg"
                             />
-                            <p className="text-sm text-white font-semibold">The largest computer science organization at UIUC</p>
+                            <p className="text-md text-white font-semibold">The largest computer science organization at UIUC</p>
                         </div>
-                        <div className="flex items-center space-x-2 font-mono text-white text-xs">
+                        <div className="flex items-center space-x-2 font-mono text-white text-md mb-2">
                             <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline ">
                                 acm.illinois.edu
                             </a>
