@@ -9,9 +9,9 @@
 
 
 4. Flash to an SD Card, boot the Pi with the autologin.
-5. Go to `raspi-config`, disable autologin.
-6. Get a root shell via sudo.
-7. Install Tailscale on the node, apply the tag `devel-root-ok`.
+5. Get a root shell via sudo.
+6. Install Tailscale on the node, apply the tag `devel-root-ok`.
+7. Go to `raspi-config`, disable autologin, screen blanking, and set boot to console.
 8. Exit the physical shell and make sure you can SSH to the node via Tailscale.
 9. Run the deploy.sh script.
 10. Profit??
