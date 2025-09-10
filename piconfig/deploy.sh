@@ -20,7 +20,6 @@ else
     echo "Error: User '$USER' not found."
     exit 1
 fi
-timedatectl set-timezone America/Chicago
 apt-get purge -y lightdm labwc xorg
 apt-get install -y --no-install-recommends unclutter
 apt-get install -y cage seatd chromium-browser
@@ -36,7 +35,7 @@ EOF
 
 # disable the HDMI-CEC input device so cage doesn't show a pointer when there isn't one. 
 cat << EOF > /etc/udev/rules.d/99-ignore-hdmi-cec.rules
-ACTION!="remove",KERNEL=="event[0-9]*",ATTRS{name}=="vc4-hdmi",ENV{LIBINPUT_IGNORE_DEVICE}="1"
+ACTION!="remove",KERNEL=="event[0-9]*",ATTRS{name}=="vc4-hdmi*",ENV{LIBINPUT_IGNORE_DEVICE}="1"
 EOF
 
 udevadm control --reload-rules
