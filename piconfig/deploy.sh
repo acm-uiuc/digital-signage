@@ -23,7 +23,7 @@ fi
 timedatectl set-timezone America/Chicago
 apt-get purge -y lightdm labwc xorg
 apt-get install -y --no-install-recommends unclutter
-apt-get install -y cage seatd
+apt-get install -y cage seatd chromium-browser
 
 mkdir -p /home/$USER/.xdg/
 cat << EOF > /home/$USER/launch.sh
