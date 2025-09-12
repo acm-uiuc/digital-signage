@@ -30,6 +30,7 @@ cat << EOF > /home/$USER/launch.sh
 export XDG_RUNTIME_DIR=\$(mktemp -d)
 export XCURSOR_PATH=\$(mktemp -d)
 export WLR_LIBINPUT_NO_DEVICES=1
+rm -rf /root/.config/chromium/
 cage -- /usr/bin/chromium-browser --noerrdialogs --no-sandbox --disable-infobars --kiosk --app=https://acmuiuc-digital-signage.acmuiuc.workers.dev/default
 EOF
 
