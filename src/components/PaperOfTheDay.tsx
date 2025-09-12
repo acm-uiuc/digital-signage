@@ -40,10 +40,6 @@ const THEMED_CATEGORIES = [
         name: 'Computational Science',
         categories: ['cs.CE', 'cs.NA'],
     },
-    {
-        name: 'Emerging & General CS',
-        categories: ['cs.ET', 'cs.OH', 'cs.GL', 'cs.DL'],
-    },
 ];
 
 
