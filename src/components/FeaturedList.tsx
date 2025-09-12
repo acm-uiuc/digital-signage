@@ -20,7 +20,7 @@ function EventCard({ event }: { event: Event }) {
                 </div>
             )}
             <h2 className="text-2xl font-semibold text-white">{event.title}</h2>
-            <p className="text-base font-normal text-white">{event.description}</p>
+            <p className="text-base font-normal text-white line-clamp-3">{event.description}</p>
             <div className="text-vista_blue-700 text-base pt-1 space-y-2">
                 <p className="flex items-center gap-3"><Calendar size={18} /> <span>{new Date(event.start).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' })}</span></p>
                 {event.repeats && (

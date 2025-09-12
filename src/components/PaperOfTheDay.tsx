@@ -90,14 +90,14 @@ export default async function PaperOfTheDay() {
         return (
             <>
                 <h1 className="ml-6 text-3xl font-extrabold text-white mb-3">Featured Paper</h1>
-                <div className="flex mr-6 ml-6 p-4 bg-slate-800 rounded-lg text-white mb-3">
+                <div className="flex mr-6 ml-6 py-2 px-3 bg-slate-800 rounded-lg text-white mb-3">
                     <div className="flex flex-col flex-grow overflow-hidden pr-4">
                         <h2 className="text-base font-bold text-acmblue-200 mb-2">{theme.name}</h2>
                         <h3 className="text-lg font-bold leading-tight"><Latex>{paper.title}</Latex></h3>
                         <p className="text-sm text-gray-200 mb-3 italic">
                             {paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}
                         </p>
-                        <p className="flex-grow text-base text-white overflow-hidden text-ellipsis line-clamp-6">
+                        <p className="flex-grow text-base text-white overflow-hidden text-ellipsis line-clamp-4">
                             <Latex>{paper.summary}</Latex>
                         </p>
                     </div>
