@@ -8,8 +8,10 @@ import { processNextOccurrences } from '@/lib/eventProcessor';
 import usePeriodicRefresh from '@/lib/hooks/usePeriodicRefresh';
 import { getConfig } from '@/lib/config';
 import Image from 'next/image';
+import DigitalClock from './DigitalClock';
 
 const REFRESH_EVERY_SECONDS = 60 * 2;
+
 
 export function EventsView({
     environment,
@@ -84,8 +86,9 @@ export function EventsView({
 
             {
                 !config.hideAcmLogo && (
-                    <div className="flex flex-col w-full items-center justify-center bg-acmblue-900 border-t h-1/4">
-                        <div className="flex items-center space-x-4 mt-2">
+                    <div className="flex items-center justify-between w-full bg-acmblue-900 border-t h-1/4 px-6">
+                        {/* Left side - ACM Logo and tagline */}
+                        <div className="flex items-center space-x-4">
                             <Image
                                 src="https://static.acm.illinois.edu/banner-white.png"
                                 alt="ACM @ UIUC Logo"
@@ -94,10 +97,19 @@ export function EventsView({
                                 height={40}
                                 className="rounded-lg"
                             />
-                            <p className="text-md text-white font-semibold">The largest computer science organization at UIUC</p>
+                            <p className="text-md text-white font-semibold">
+                                The largest computer science organization at UIUC
+                            </p>
                         </div>
-                        <div className="flex items-center space-x-2 font-mono text-white text-md mb-2">
-                            <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline ">
+
+                        {/* Center - Digital Clock */}
+                        <div className="flex-shrink-0">
+                            <DigitalClock />
+                        </div>
+
+                        {/* Right side - Links */}
+                        <div className="flex items-center space-x-2 font-mono text-white text-md">
+                            <a href="https://www.acm.illinois.edu/" target="_blank" rel="noopener noreferrer" className="hover:underline">
                                 acm.illinois.edu
                             </a>
                             <span>|</span>
