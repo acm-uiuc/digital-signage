@@ -205,7 +205,7 @@ export default function AllEventsList({ events }: { events: Event[] }) {
 
                 {otherEvents.length > 0 && (
                     <>
-                        {featuredEvents.length > 0 && <h3 className="text-xl font-semibold text-acmblue-200 mb-2 flex-shrink-0">Other Events</h3>}
+                        {featuredEvents.length > 0 && <h3 className="text-2xl font-semibold text-acmblue-200 mb-1 flex-shrink-0">Other Events</h3>}
                         <div className="flex-1 relative overflow-hidden">
                             <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-primary-300/80 to-transparent z-10" />
                             <motion.div ref={otherRef} animate={otherControls}>

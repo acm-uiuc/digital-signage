@@ -136,7 +136,7 @@ export default function FeaturedList({ events }: { events: Event[] }) {
         <div className="w-full h-full p-6 flex flex-col">
             <div className="pb-4 border-b border-primary-400/30">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold text-white">Featured Events</h1>
+                    <h1 className="text-5xl font-bold text-white">Featured Events</h1>
                     {showScrollIndicator && (
                         <div className="flex items-center gap-2 text-secondary-600 text-sm">
                             <motion.div
