@@ -5,6 +5,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { Event } from '@/lib/types';
 import { getInformalRepeatString } from '@/lib/eventProcessor';
 import { Calendar, MapPin, Repeat, Star } from 'lucide-react';
+import { SCROLL_SPEED_PX_PER_SEC } from './FeaturedList';
 
 const MAX_DESC_LENGTH = 100;
 const CLOSE_ENOUGH_THRESHOLD = 0.75;
@@ -140,8 +141,8 @@ export default function AllEventsList({ events }: { events: Event[] }) {
             return;
         };
         const animate = async () => {
-            await featuredControls.set({ y: 0 });
-            await featuredControls.start({ y: -featuredHeight, transition: { duration: featuredHeight / 30, ease: "linear", repeat: Infinity } });
+            featuredControls.set({ y: 0 });
+            await featuredControls.start({ y: -featuredHeight, transition: { duration: featuredHeight / SCROLL_SPEED_PX_PER_SEC, ease: "linear", repeat: Infinity } });
         };
         animate();
         return () => featuredControls.stop();
