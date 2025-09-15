@@ -110,7 +110,7 @@ export default function AllEventsList({ events }: { events: Event[] }) {
         if (!a.repeats && b.repeats) return -1;
         if (a.repeats && !b.repeats) return 1;
         return new Date(a.start).getTime() - new Date(b.start).getTime();
-    });
+    }).slice(0, 2);
 
     const featuredEventIds = new Set(featuredEvents.map(e => e.id));
 
