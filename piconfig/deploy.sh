@@ -32,7 +32,7 @@ export XCURSOR_PATH=$(mktemp -d)
 export WLR_LIBINPUT_NO_DEVICES=1
 export URL="https://acmuiuc-digital-signage.acmuiuc.workers.dev/default"
 rm -rf /root/.config/chromium/
-cage -- /usr/bin/chromium-browser --noerrdialogs --no-sandbox --disable-infobars --kiosk --hide-scrollbars --app=$URL
+cage -- /usr/bin/chromium-browser --noerrdialogs --no-sandbox --disable-infobars --kiosk --hide-scrollbars --enable-features=UseOzonePlatform --ozone-platform=wayland --app=$URL
 EOF
 
 # disable the HDMI-CEC input device so cage doesn't show a pointer when there isn't one. 
