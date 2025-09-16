@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useAnimationFrame } from 'framer-motion';
 import { Calendar, MapPin, Repeat, Users, ChevronDown } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { getInformalRepeatString } from '@/lib/eventProcessor';
@@ -68,35 +68,26 @@ function LoopDivider() {
 
 export default function FeaturedList({ events }: { events: Event[] }) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [animation, setAnimation] = useState({ duration: 0, height: 0 });
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [contentHeight, setContentHeight] = useState(0);
     const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+    const scrollY = useRef(0);
+    const lastTime = useRef(0);
 
     useEffect(() => {
-        if (!containerRef.current || !containerRef.current.parentElement) return;
+        if (!scrollRef.current || !containerRef.current) return;
 
         const measureContent = () => {
             const container = containerRef.current!;
-            const parent = container.parentElement!;
+            const scrollContent = scrollRef.current!;
 
-            const tempDiv = document.createElement('div');
-            tempDiv.style.position = 'absolute';
-            tempDiv.style.visibility = 'hidden';
-            tempDiv.className = container.className;
-            tempDiv.innerHTML = container.innerHTML;
-            parent.appendChild(tempDiv);
+            const firstSet = scrollContent.children[0];
+            if (firstSet) {
+                const setHeight = firstSet.scrollHeight;
+                setContentHeight(setHeight);
 
-            const singleSetHeight = tempDiv.querySelector('.grid')?.scrollHeight || 0;
-            parent.removeChild(tempDiv);
-
-            const viewportHeight = parent.clientHeight;
-
-            if (singleSetHeight > viewportHeight) {
-                const duration = singleSetHeight / SCROLL_SPEED_PX_PER_SEC;
-                setAnimation({ duration, height: singleSetHeight });
-                setShowScrollIndicator(true);
-            } else {
-                setAnimation({ duration: 0, height: 0 });
-                setShowScrollIndicator(false);
+                const parentHeight = container.clientHeight;
+                setShowScrollIndicator(setHeight > parentHeight);
             }
         };
 
@@ -104,32 +95,64 @@ export default function FeaturedList({ events }: { events: Event[] }) {
         return () => clearTimeout(timeoutId);
     }, [events]);
 
-    const isAnimating = animation.duration > 0;
+    useAnimationFrame((time) => {
+        if (!scrollRef.current || contentHeight === 0 || !showScrollIndicator) return;
 
-    const renderEventSets = () => {
-        if (!isAnimating) {
-            return events.map((event, index) => (
-                <EventCard key={`${event.id}-${index}`} event={event} />
-            ));
+        if (lastTime.current === 0) {
+            lastTime.current = time;
+            return;
         }
 
-        const sets = [];
-        for (let setIndex = 0; setIndex < 3; setIndex++) {
-            if (setIndex > 0) {
-                sets.push(<LoopDivider key={`divider-${setIndex}`} />);
-            }
+        const deltaTime = (time - lastTime.current) / 1000;
+        lastTime.current = time;
 
+        scrollY.current += SCROLL_SPEED_PX_PER_SEC * deltaTime;
 
-            events.forEach((event, eventIndex) => {
-                sets.push(
-                    <EventCard
-                        key={`${event.id}-${setIndex}-${eventIndex}`}
-                        event={event}
-                    />
-                );
-            });
+        if (scrollY.current >= contentHeight) {
+            scrollY.current = scrollY.current % contentHeight;
         }
-        return sets;
+
+        if (scrollRef.current) {
+            scrollRef.current.style.transform = `translateY(-${scrollY.current}px)`;
+        }
+    });
+
+    useEffect(() => {
+        scrollY.current = 0;
+        lastTime.current = 0;
+        if (scrollRef.current) {
+            scrollRef.current.style.transform = 'translateY(0)';
+        }
+    }, [events]);
+
+    const renderContent = () => {
+        if (!showScrollIndicator) {
+            return (
+                <div className="grid grid-cols-2 gap-4">
+                    {events.map((event, index) => (
+                        <EventCard key={`${event.id}-${index}`} event={event} />
+                    ))}
+                </div>
+            );
+        }
+
+        return (
+            <>
+                <div className="grid grid-cols-2 gap-4">
+                    {events.map((event, index) => (
+                        <EventCard key={`${event.id}-0-${index}`} event={event} />
+                    ))}
+                    <LoopDivider />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    {events.map((event, index) => (
+                        <EventCard key={`${event.id}-1-${index}`} event={event} />
+                    ))}
+                    <LoopDivider />
+                </div>
+            </>
+        );
     };
 
     return (
@@ -151,34 +174,20 @@ export default function FeaturedList({ events }: { events: Event[] }) {
                 </div>
             </div>
 
-            <div className="flex-grow relative overflow-hidden mt-4">
-                {/* Softer gradients for top and bottom */}
+            <div ref={containerRef} className="flex-grow relative overflow-hidden mt-4">
                 <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-primary-300 via-primary-300/60 to-transparent z-10 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-primary-300 via-primary-300/60 to-transparent z-10 pointer-events-none" />
 
-                <motion.div
-                    ref={containerRef}
+                <div
+                    ref={scrollRef}
                     className="relative"
-                    animate={isAnimating ? {
-                        y: [0, -animation.height]
-                    } : { y: 0 }}
-                    transition={isAnimating ? {
-                        duration: animation.duration,
-                        ease: "linear",
-                        repeat: Infinity,
-                        repeatType: "loop"
-                    } : undefined}
                     style={{
-                        willChange: isAnimating ? 'transform' : 'auto',
-                        transform: 'translateZ(0)',
+                        willChange: showScrollIndicator ? 'transform' : 'auto',
                         backfaceVisibility: 'hidden',
-                        perspective: 1000
                     }}
                 >
-                    <div className="grid grid-cols-2 gap-4">
-                        {renderEventSets()}
-                    </div>
-                </motion.div>
+                    {renderContent()}
+                </div>
             </div>
         </div>
     );
