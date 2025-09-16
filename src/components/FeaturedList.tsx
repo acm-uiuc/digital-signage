@@ -75,24 +75,41 @@ export default function FeaturedList({ events }: { events: Event[] }) {
     const lastTime = useRef(0);
 
     useEffect(() => {
-        if (!scrollRef.current || !containerRef.current) return;
+        const container = containerRef.current;
+        const scrollContent = scrollRef.current;
+        if (!scrollContent || !container) return;
 
         const measureContent = () => {
-            const container = containerRef.current!;
-            const scrollContent = scrollRef.current!;
+            if (scrollContent.children.length === 0) {
+                setShowScrollIndicator(false);
+                return;
+            }
 
-            const firstSet = scrollContent.children[0];
-            if (firstSet) {
-                const setHeight = firstSet.scrollHeight;
-                setContentHeight(setHeight);
+            const firstSet = scrollContent.children[0] as HTMLElement;
+            const parentHeight = container.clientHeight;
+            const contentIsScrollable = firstSet.offsetHeight > parentHeight;
 
-                const parentHeight = container.clientHeight;
-                setShowScrollIndicator(setHeight > parentHeight);
+            setShowScrollIndicator(contentIsScrollable);
+
+            // FIX: If scrolling, measure the offset of the second block to get the
+            // true loop height, which includes the gap between the two sets.
+            if (contentIsScrollable && scrollContent.children.length > 1) {
+                const secondSet = scrollContent.children[1] as HTMLElement;
+                setContentHeight(secondSet.offsetTop);
+            } else {
+                setContentHeight(firstSet.offsetHeight);
             }
         };
 
-        const timeoutId = setTimeout(measureContent, 100);
-        return () => clearTimeout(timeoutId);
+        // Use ResizeObserver for robust measurement on container or content resize
+        const observer = new ResizeObserver(measureContent);
+        observer.observe(container);
+        observer.observe(scrollContent);
+
+        // Initial measurement
+        measureContent();
+
+        return () => observer.disconnect();
     }, [events]);
 
     useAnimationFrame((time) => {
@@ -108,8 +125,9 @@ export default function FeaturedList({ events }: { events: Event[] }) {
 
         scrollY.current += SCROLL_SPEED_PX_PER_SEC * deltaTime;
 
+        // The modulo operator handles the reset smoothly
         if (scrollY.current >= contentHeight) {
-            scrollY.current = scrollY.current % contentHeight;
+            scrollY.current %= contentHeight;
         }
 
         if (scrollRef.current) {
@@ -117,6 +135,7 @@ export default function FeaturedList({ events }: { events: Event[] }) {
         }
     });
 
+    // Reset animation state when events change
     useEffect(() => {
         scrollY.current = 0;
         lastTime.current = 0;
