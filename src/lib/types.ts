@@ -1,5 +1,6 @@
-import { AllOrganizationList } from "@acm-uiuc/js-shared";
-export type Organization = typeof AllOrganizationList[number];
+import { OrganizationsByName } from "@acm-uiuc/js-shared";
+
+export type Organization = typeof OrganizationsByName[number];
 
 export const validRepeats = [
     'weekly',
