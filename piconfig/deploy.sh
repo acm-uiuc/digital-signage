@@ -27,12 +27,31 @@ apt-get install -y cage seatd chromium-browser
 mkdir -p /home/$USER/.xdg/
 cat << EOF > /home/$USER/launch.sh
 #!/bin/sh
+
+# Configuration
+OUTPUT="HDMI-A-1"
+MODE="1920x1080@120Hz"
+URL="https://acmuiuc-digital-signage.acmuiuc.workers.dev/default"
+
+# Setup environment
 export XDG_RUNTIME_DIR=$(mktemp -d)
 export XCURSOR_PATH=$(mktemp -d)
 export WLR_LIBINPUT_NO_DEVICES=1
-export URL="https://acmuiuc-digital-signage.acmuiuc.workers.dev/default"
+
+# Clean chromium config
 rm -rf /root/.config/chromium/
-cage -- /usr/bin/chromium-browser --noerrdialogs --no-sandbox --disable-infobars --kiosk --hide-scrollbars --enable-features=UseOzonePlatform --ozone-platform=wayland --app=$URL
+
+# Launch cage with resolution configuration and chromium
+cage -- sh -c "wlr-randr --output ${OUTPUT} --mode ${MODE} && \
+    /usr/bin/chromium-browser \
+        --noerrdialogs \
+        --no-sandbox \
+        --disable-infobars \
+        --kiosk \
+        --hide-scrollbars \
+        --enable-features=UseOzonePlatform \
+        --ozone-platform=wayland \
+        --app=${URL}"
 EOF
 
 # disable the HDMI-CEC input device so cage doesn't show a pointer when there isn't one. 
