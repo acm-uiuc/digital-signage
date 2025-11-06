@@ -113,8 +113,8 @@ export function EventsView({
                                 acm.illinois.edu
                             </a>
                             <span>|</span>
-                            <a href="https://go.acm.illinois.edu/discord" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                                go.acm.illinois.edu/discord
+                            <a href="https://acm.gg/discord" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                acm.gg/discord
                             </a>
                             <span>|</span>
                             <a href="https://www.instagram.com/acm.uiuc/" target="_blank" rel="noopener noreferrer" className="hover:underline">
