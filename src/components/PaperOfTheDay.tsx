@@ -38,7 +38,7 @@ const THEMED_CATEGORIES = [
     },
     {
         name: 'Computational Science',
-        categories: ['cs.CE', 'cs.NA'],
+        categories: ['cs.CE'],
     },
 ];
 
