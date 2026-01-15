@@ -1,5 +1,5 @@
 # ACM Digital Signage
-The base website for our digital kiosk Raspberry Pi (which runs [piosk](https://github.com/debloper/piosk)) to show upcoming calendar events on the ACM front room TV.
+The base website for our digital kiosk Raspberry Pi (which runs [cage]([https://github.com/debloper/piosk](https://github.com/cage-kiosk/cage) on Raspbian) to show upcoming calendar events on the ACM front room TV.
 
 ## Getting Started
 First, install the dependencies:
